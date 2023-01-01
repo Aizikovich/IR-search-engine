@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 
+from pageViews import page_views
+from pageRank import page_rank
+
+
 
 class MyFlaskApp(Flask):
     def run(self, host=None, port=None, debug=None, **options):
@@ -121,7 +125,10 @@ def search_anchor():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-
+    for word in query.split():
+        if word in anchor_text:
+            for wiki_id in anchor_text[word]:
+                res.append((wiki_id, title[wiki_id]))
     # END SOLUTION
     return jsonify(res)
 
@@ -180,7 +187,7 @@ def get_pageview():
     # BEGIN SOLUTION
     for wiki_id in wiki_ids:
         # TODO: Implement this function
-        res.append(pageview[wiki_id])
+        res.append(page_views()[wiki_id])
     print(res)
     # END SOLUTION
     return jsonify(res)
