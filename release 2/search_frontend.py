@@ -185,10 +185,7 @@ def get_pageview():
         return jsonify(res)
 
     # BEGIN SOLUTION
-    for wiki_id in wiki_ids:
-        # TODO: Implement this function
-        res.append(page_views()[wiki_id])
-    print(res)
+    res = page_views(wiki_ids)
     # END SOLUTION
     return jsonify(res)
 
