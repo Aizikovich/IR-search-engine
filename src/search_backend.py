@@ -39,7 +39,7 @@ nltk.download('stopwords')
 (e) ranking by article page views
 """
 
-pkl_file = "part15_preprocessed.pkl"
+pkl_file = "../data/part15_preprocessed.pkl"
 
 try:
     if os.environ["assignment_2_data"] is not None:
