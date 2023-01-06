@@ -1,45 +1,44 @@
 import pickle
-from collections import Counter
-from pathlib import Path
+import pandas as pd
 
 # Paths
-# Using user page views (as opposed to spiders and automated traffic) for the
-# month of August 2021
-pv_path = 'https://dumps.wikimedia.org/other/pageview_complete/monthly/2021/2021-08/pageviews-202108-user.bz2'
-p = Path(pv_path)
-pv_name = p.name
-pv_temp = f'{p.stem}-4dedup.txt'
-pv_clean = f'{p.stem}.pkl'
-# Download the file (2.3GB)
 
-if not Path(pv_name).exists():
-#TODO: Understand why this is not working
-    !wget -q $pv_path
-!wget -N $pv_path
-# Filter for English pages, and keep just two fields: article ID (3) and monthly
-# total number of page views (5). Then, remove lines with article id or page
-# view values that are not a sequence of digits.
-!bzcat $pv_name | grep "^en\.wikipedia" | cut -d' ' -f3,5 | grep -P "^\d+\s\d+$" > $pv_temp
-# Create a Counter (dictionary) that sums up the pages views for the same
-# article, resulting in a mapping from article id to total page views.
-wid2pv = Counter()
-with open(pv_temp, 'rt') as f:
-  for line in f:
-    parts = line.split(' ')
-    wid2pv.update({int(parts[0]): int(parts[1])})
-# write out the counter as binary file (pickle it)
-with open(pv_clean, 'wb') as f:
-  pickle.dump(wid2pv, f)
-# read in the counter
-with open(pv_clean, 'rb') as f:
-  wid2pv = pickle.loads(f.read())
+# TODO put real path here + download wiki page views data like we did in assignment 1
+PV_PATH = '/pageviews-202108-user.pkl'
 
-def page_views():
-    """ Returns a dictionary that maps article IDs to the number of page views
-        that each article had in August 2021.
+print("Loading page views...")
+with open(PV_PATH, 'rb') as f:
+    wid2pv = pickle.load(f)
+
+pv = pd.DataFrame.from_dict(wid2pv, orient='index', columns=['p_id', 'pageview'])
+pv = pv.set_index('p_id')
+pv_dict = pv.to_dict()['pageview']
+print("Page views loaded successfully!")
+
+
+def page_views(ids):
+    """
+    Returns the number of page views that each of the provide wiki articles
+    had in August 2021.
+
+    Args:
+    -----
+        ids: list of ints
+            list of wiki article IDs
+
     Returns:
     --------
-        dict of int to int:
-          mapping from article ID to number of page views in August 2021.
+        list of ints:
+            list of page view numbers from August 2021 that correspond to the
+            provided list article IDs.
     """
-    return wid2pv
+    # TODO test if this works as expected
+    res = []
+    for pid in ids:
+        try:
+            res.append(pv_dict[pid])
+        except KeyError:
+            res.append(None)
+    return res
+
+    
