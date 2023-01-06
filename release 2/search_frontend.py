@@ -4,7 +4,6 @@ from pageViews import page_views
 from pageRank import page_rank
 
 
-
 class MyFlaskApp(Flask):
     def run(self, host=None, port=None, debug=None, **options):
         super(MyFlaskApp, self).run(host=host, port=port, debug=debug, **options)
@@ -135,7 +134,7 @@ def search_anchor():
 
 @app.route("/get_pagerank", methods=['POST'])
 def get_pagerank():
-    ''' Returns PageRank values for a list of provided wiki article IDs. 
+    """ Returns PageRank values for a list of provided wiki article IDs.
 
         Test this by issuing a POST request to a URL like:
           http://YOUR_SERVER_DOMAIN/get_pagerank
@@ -148,15 +147,13 @@ def get_pagerank():
     --------
         list of floats:
           list of PageRank scores that correspond to the provided article IDs.
-    '''
+    """
     res = []
     wiki_ids = request.get_json()
     if len(wiki_ids) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    for wiki_id in wiki_ids:
-        # TODO: Implement this function
-        res.append(page_rank[wiki_id])
+    res = page_rank(wiki_ids)
     # END SOLUTION
     return jsonify(res)
 
