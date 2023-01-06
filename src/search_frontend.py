@@ -4,7 +4,6 @@ from pageViews import page_views
 from pageRank import page_rank
 
 
-
 class MyFlaskApp(Flask):
     def run(self, host=None, port=None, debug=None, **options):
         super(MyFlaskApp, self).run(host=host, port=port, debug=debug, **options)
@@ -105,7 +104,7 @@ def search_anchor():
         IN THE ANCHOR TEXT of articles, ordered in descending order of the
         NUMBER OF QUERY WORDS that appear in anchor text linking to the page.
         DO NOT use stemming. DO USE the staff-provided tokenizer from Assignment
-        3 (GCP part) to do the tokenization and remove stopwords. For example,
+        3 (GCP part) to do the tokenization and remove stopwords. For   example,
         a document with a anchor text that matches two distinct query words will
         be ranked before a document with anchor text that matches only one
         distinct query word, regardless of the number of times the term appeared
@@ -135,7 +134,7 @@ def search_anchor():
 
 @app.route("/get_pagerank", methods=['POST'])
 def get_pagerank():
-    ''' Returns PageRank values for a list of provided wiki article IDs. 
+    """ Returns PageRank values for a list of provided wiki article IDs.
 
         Test this by issuing a POST request to a URL like:
           http://YOUR_SERVER_DOMAIN/get_pagerank
@@ -148,15 +147,13 @@ def get_pagerank():
     --------
         list of floats:
           list of PageRank scores that correspond to the provided article IDs.
-    '''
+    """
     res = []
     wiki_ids = request.get_json()
     if len(wiki_ids) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    for wiki_id in wiki_ids:
-        # TODO: Implement this function
-        res.append(page_rank[wiki_id])
+    res = page_rank(wiki_ids)
     # END SOLUTION
     return jsonify(res)
 
@@ -185,10 +182,7 @@ def get_pageview():
         return jsonify(res)
 
     # BEGIN SOLUTION
-    for wiki_id in wiki_ids:
-        # TODO: Implement this function
-        res.append(page_views()[wiki_id])
-    print(res)
+    res = page_views(wiki_ids)
     # END SOLUTION
     return jsonify(res)
 
