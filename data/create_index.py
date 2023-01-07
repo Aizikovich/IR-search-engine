@@ -9,7 +9,6 @@ from contextlib import closing
 from src.methods.tokenizer import tokenize
 
 BLOCK_SIZE = 1999998
-# BLOCK_SIZE = 600  # for testing
 
 
 class MultiFileWriter:
@@ -68,63 +67,6 @@ class MultiFileReader:
         return False
 
 
-# class MultiFileWriter:
-#     """ Sequential binary writer to multiple files of up to BLOCK_SIZE each. """
-#
-#     def __init__(self, base_dir='', name='default'):
-#         self._base_dir = Path(base_dir)
-#         self._name = name
-#         self._file_gen = (open(self._base_dir / f'{name}_{i:03}.bin', 'wb')
-#                           for i in count())
-#         self._f = next(self._file_gen)
-#
-#     def write(self, b):
-#         locs = []
-#         while len(b) > 0:
-#             pos = self._f.tell()
-#             remaining = BLOCK_SIZE - pos
-#             # if the current file is full, close and open a new one.
-#             if remaining == 0:
-#                 self._f.close()
-#                 # TODO write to bucket using path
-#                 self._f = next(self._file_gen)
-#                 pos, remaining = 0, BLOCK_SIZE
-#             self._f.write(b[:remaining])
-#             locs.append((self._f.name, pos))
-#             b = b[remaining:]
-#         return locs
-#
-#     def close(self):
-#         self._f.close()
-
-
-# class MultiFileReader:
-#    """ Sequential binary reader of multiple files of up to BLOCK_SIZE each. """
-#
-#     def __init__(self):
-#         self._open_files = {}
-#
-#     def read(self, path, locs, n_bytes):
-#         b = []
-#         for f_name, offset in locs:
-#             if f_name not in self._open_files:
-#                 self._open_files[f_name] = open(f'{path}/{f_name}', 'rb')
-#             f = self._open_files[f_name]
-#             f.seek(offset)
-#             n_read = min(n_bytes, BLOCK_SIZE - offset)
-#             b.append(f.read(n_read))
-#             n_bytes -= n_read
-#         return b''.join(b)
-#
-#     def close(self):
-#         for f in self._open_files.values():
-#             f.close()
-#
-#     def __exit__(self, exc_type, exc_value, traceback):
-#         self.close()
-#         return False
-
-
 TUPLE_SIZE = 6  # We're going to pack the doc_id and tf values in this
 # many bytes.
 TF_MASK = 2 ** 16 - 1  # Masking the 16 low bits of an integer
@@ -164,6 +106,8 @@ class InvertedIndex:
         w2cnt = Counter(tokens)
         self.term_total.update(w2cnt)
         for w, cnt in w2cnt.items():
+            # here ok!
+
             self.df[w] = self.df.get(w, 0) + 1
             self._posting_list[w].append((doc_id, cnt))
 
@@ -174,13 +118,13 @@ class InvertedIndex:
             (1) posting files `name`XXX.bin containing the posting lists.
             (2) `name`.pkl containing the global term stats (e.g. df).
         """
-        # POSTINGS ###############################################################
+
         self.posting_locs = defaultdict(list)
         with closing(MultiFileWriter(base_dir, name)) as writer:
             # iterate over posting lists in lexicographic order
             for w in sorted(self._posting_list.keys()):
                 self._write_a_posting_list(w, writer, sort=True)
-        # GLOBAL DICTIONARIES ####################################################
+        #### GLOBAL DICTIONARIES ####
         self._write_globals(base_dir, name)
 
     def _write_globals(self, base_dir, name):
@@ -204,7 +148,7 @@ class InvertedIndex:
             try:
                 pl = sorted(pl, key=itemgetter(0))
             except TypeError:
-                print(w, pl[:10])
+                print("in exepct", w, pl[:10])
                 # print(w in pl[0])
                 quit(1)
         # convert to bytes
@@ -224,14 +168,15 @@ class InvertedIndex:
             for w, locs in self.posting_locs.items():
                 # read a certain number of bytes into variable b
                 b = reader.read(locs, self.df[w] * TUPLE_SIZE)
-                posting_list = []
-                j = TUPLE_SIZE
-                # TODO check if the loop is correct
-                while j <= self.df[w] * TUPLE_SIZE:
-                    temp = int.from_bytes(b[j - TUPLE_SIZE: j - TUPLE_SIZE + 4], 'big')
-                    # print(temp)
-                    posting_list.append(temp)
-                    j += TUPLE_SIZE
+
+                int_vals = [x for x in b]
+                appearance = [int_vals[x:x + 6] for x in range(0, len(int_vals), 6)]
+                posting_list = [(x[-3], x[-1]) for x in appearance]
+
+                # convert the bytes read into `b` to a proper posting list.
+                # YOUR CODE HERE
+                if w == '#':
+                    print(w, posting_list[:10])
                 yield w, posting_list
 
     def merge_indices(self, base_dir, names, output_name):
@@ -246,30 +191,22 @@ class InvertedIndex:
             output_name: str
                 The name of the merged index.
         """
-        # TODO check if function is needed
         indices = [InvertedIndex.read_index(base_dir, name) for name in names]
         iters = [idx.posting_lists_iter() for idx in indices]
 
         self.posting_locs = defaultdict(list)
-        # POSTINGS: merge & write out ################################################
-        words = set()
-        for it in iters:
-            for w, pl in it:
-                words.add(w)
-                self._posting_list[w] += pl
 
-        # Sum counters from indices
-        for ix in indices:
-            self.term_total += ix.term_total
-            self.df += ix.df
+        for i in iters:
+            for w, p in i:
+                self._posting_list[w] += p
 
-        # Why didn't this work properly?
-        # for w in words:
-        #   if self.term_total[w] != sum([i[1] for i in self._posting_list[w]]):
-        #     print("found a problem with word", w, self.term_total[w], sum([i[1] for i in self._posting_list[w]]))
+        for index in indices:
+            self.df += index.df
+            self.term_total += index.term_total
 
-        self.write(base_dir, output_name)
-        # GLOBAL DICTIONARIES ####################################################
+        self.write(base_dir, name=output_name)
+
+        # GLOBAL DICTIONARIES
         self._write_globals(base_dir, output_name)
 
     @staticmethod
@@ -362,8 +299,10 @@ def process_wiki(pages, index_name, tokenize_func=default_tokenizer):
 
 def main():
     # read the dump
-    pages = pickle.load(open('part15_preprocessed.pkl', 'rb'))
-    # process the dump
+    pkl_file = "part15_preprocessed.pkl"
+    with open(pkl_file, 'rb') as f:
+        pages = pickle.load(f)
+        # process the dump
     body_ix, title_ix, anchor_ix = process_wiki(pages, 'wiki_index')
     print(body_ix)
 
