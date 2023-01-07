@@ -1,6 +1,5 @@
 import numpy as np
-from data.tokenizer import tokenize
-
+from src.methods.tokenizer import tokenize
 
 
 def get_candidate_documents_for_binary(query_to_search, index, words, pls):
@@ -14,13 +13,19 @@ def get_candidate_documents_for_binary(query_to_search, index, words, pls):
     :param words:        list of words in the index
     :param pls:          posting list for every word in words
     :return:         dictionary of candidate documents and their scores
+
+
+    'Hello, I love information retrival'
+    doc1 = 'hello world'
+    doc2 = 'hello world love '
     """
     candidates = {}
     for term in np.unique(query_to_search):
         if term in words:
             list_of_doc = pls[words.index(term)]
-            for candidate in list_of_doc:
-                candidates[candidate] = candidates.get(candidate, 0) + 1
+            for doc in list_of_doc:
+                candidates[doc] = candidates.get(doc, 0) + 1
+
     return candidates
 
 
@@ -46,9 +51,10 @@ def binary_search(query_to_search, index, words, pls, n=0):
     :param index: inverted index loaded from the corresponding files.
     :param words: list of words in the index
     :param pls: posting list for every word in words
-    :return: list of top n documents
+    :return: list of top n doc_id
     """
     query = tokenize(query_to_search)
     candidates = get_candidate_documents_for_binary(query, index, words, pls)
-    return get_top_n(candidates, n)
+    return [x[0] for x in get_top_n(candidates, n)]
+
 

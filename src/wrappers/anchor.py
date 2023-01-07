@@ -1,6 +1,7 @@
-from methods.binary_search_methods import binary_search
+from src.methods.binary_search_methods import binary_search
 from src.invertedIndex import InvertedIndex
-from data.tokenizer import tokenize
+from src.methods.tokenizer import tokenize
+
 # TODO load index here
 index_anchor = InvertedIndex('title')
 

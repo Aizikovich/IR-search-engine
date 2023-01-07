@@ -13,6 +13,16 @@ app = MyFlaskApp(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 
+# TODO: implement
+def id_to_title(doc_id: list):
+    """
+    This function convert a list of doc_id to a list of (doc_id, title) tuples.
+    :param doc_id: list of doc_id
+    :return:  list of (doc_id, title) tuples
+    """
+    return [(0, 0)]
+
+
 @app.route("/search")
 def search():
     """ Returns up to a 100 of your best search results for the query. This is

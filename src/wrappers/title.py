@@ -1,4 +1,4 @@
-from methods.binary_search_methods import binary_search
+from src.methods.binary_search_methods import binary_search
 from src.invertedIndex import InvertedIndex
 
 # TODO load index here and base dir
@@ -15,3 +15,5 @@ def search_title_by_query(query: str, n=0) -> list:
     :return: list of top n documents matching the query
     """
     return binary_search(query, index_title, words, pls, n)
+
+
