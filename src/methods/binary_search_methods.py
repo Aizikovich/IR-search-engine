@@ -2,7 +2,7 @@ import numpy as np
 from src.methods.tokenizer import tokenize
 
 
-def get_candidate_documents_for_binary(query_to_search, index, words, pls):
+def get_candidate_documents_for_binary(query_to_search, words, pls):
     """
     Generate a dictionary representing a pool of candidate documents for a given query. This function will go through
     every token in query_to_search and calculate how many times it appears in each document.
@@ -54,7 +54,7 @@ def binary_search(query_to_search, index, words, pls, n=0):
     :return: list of top n doc_id
     """
     query = tokenize(query_to_search)
-    candidates = get_candidate_documents_for_binary(query, index, words, pls)
+    candidates = get_candidate_documents_for_binary(query, words, pls)
     return [x[0] for x in get_top_n(candidates, n)]
 
 

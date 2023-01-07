@@ -3,7 +3,9 @@ from src.invertedIndex import InvertedIndex
 from src.methods.tokenizer import tokenize
 
 # TODO load index here
+print('Loading anchor index...')
 index_anchor = InvertedIndex('title')
+print('Anchor index loaded successfully!')
 
 
 def search_anchor_by_query(query: str, n=0) -> list:
@@ -16,4 +18,4 @@ def search_anchor_by_query(query: str, n=0) -> list:
     token_query = tokenize(query)
     # TODO implement in InvertedIndex posting_lists_tokens method
     words, pls = index_anchor.posting_lists_tokens(token_query)
-    return binary_search(query, index_anchor, words, pls, n)
+    return binary_search(query, words, pls, n)

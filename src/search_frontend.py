@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 
-from pageViews import page_views
-from pageRank import page_rank
+from src.methods.pageViews import page_views
+from src.methods.pageRank import page_rank
 
 
 class MyFlaskApp(Flask):
