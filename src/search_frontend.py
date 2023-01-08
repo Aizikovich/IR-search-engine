@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 # from src.methods.pageViews import page_views
 # from src.methods.pageRank import page_rank
 from src.wrappers.title import search_title_by_query
+from data.create_index import InvertedIndex
 
 
 class MyFlaskApp(Flask):
