@@ -165,7 +165,7 @@ class InvertedIndex:
                 b = reader.read(locs, self.df[w] * TUPLE_SIZE)
 
                 int_vals = [x for x in b]
-                appearance = [int_vals[x:x + 6] for x in range(0, len(int_vals), 6)]
+                appearance = [int_vals[x:x + TUPLE_SIZE] for x in range(0, len(int_vals), TUPLE_SIZE)]
                 posting_list = [(x[-3], x[-1]) for x in appearance]
 
                 # convert the bytes read into `b` to a proper posting list.
