@@ -8,6 +8,7 @@ from contextlib import closing
 
 from src.methods.tokenizer import tokenize
 
+# from src.invertedIndex import InvertedIndex
 BLOCK_SIZE = 1999998
 
 
@@ -164,12 +165,20 @@ class InvertedIndex:
                 # read a certain number of bytes into variable b
                 b = reader.read(locs, self.df[w] * TUPLE_SIZE)
 
-                int_vals = [x for x in b]
-                appearance = [int_vals[x:x + 6] for x in range(0, len(int_vals), 6)]
-                posting_list = [(x[-3], x[-1]) for x in appearance]
-
-                # convert the bytes read into `b` to a proper posting list.
-                # YOUR CODE HERE
+                # int_vals = [x for x in b]
+                # appearance = [int_vals[x:x + 6] for x in range(0, len(int_vals), 6)]
+                # posting_list = [(x[-3], x[-1]) for x in appearance]
+                #
+                # # convert the bytes read into `b` to a proper posting list.
+                # # YOUR CODE HERE
+                posting_list = []
+                j = TUPLE_SIZE
+                # TODO check if the loop is correct
+                while j <= self.df[w] * TUPLE_SIZE:
+                    tempId = int.from_bytes(b[j - TUPLE_SIZE: j - TUPLE_SIZE + 4], 'big')
+                    tempTf = int.from_bytes(b[j - TUPLE_SIZE + 4: j], 'big')
+                    posting_list.append((tempId, tempTf))
+                    j += TUPLE_SIZE
                 if w == '#':
                     print(w, posting_list[:10])
                 yield w, posting_list

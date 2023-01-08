@@ -6,6 +6,8 @@ from pathlib import Path
 from collections import defaultdict, Counter
 from contextlib import closing
 
+from data.create_index import InvertedIndex
+
 BLOCK_SIZE = 1999998
 
 
@@ -168,9 +170,11 @@ class InvertedIndex:
                 j = TUPLE_SIZE
                 # TODO check if the loop is correct
                 while j <= self.df[w] * TUPLE_SIZE:
-                    temp = int.from_bytes(b[j - TUPLE_SIZE: j - TUPLE_SIZE + 4], 'big')
+                    tempId = int.from_bytes(b[j - TUPLE_SIZE: j - TUPLE_SIZE + 4], 'big')
+                    tempTf = int.from_bytes(b[j - TUPLE_SIZE + 4: j], 'big')
+                    posting_list.append((tempId, tempTf))
                     # print(temp)
-                    posting_list.append(temp)
+                    # posting_list.append(temp)
                     j += TUPLE_SIZE
                 yield w, posting_list
 
@@ -224,3 +228,5 @@ class InvertedIndex:
         path_globals.unlink()
         for p in Path(base_dir).rglob(f'{name}_*.bin'):
             p.unlink()
+
+
