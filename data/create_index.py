@@ -124,7 +124,7 @@ class InvertedIndex:
             # iterate over posting lists in lexicographic order
             for w in sorted(self._posting_list.keys()):
                 self._write_a_posting_list(w, writer, sort=True)
-        #### GLOBAL DICTIONARIES ####
+        # GLOBAL DICTIONARIES ############################################
         self._write_globals(base_dir, name)
 
     def _write_globals(self, base_dir, name):
@@ -145,12 +145,7 @@ class InvertedIndex:
         # sort the posting list by doc_id
         pl = self._posting_list[w]
         if sort:
-            try:
-                pl = sorted(pl, key=itemgetter(0))
-            except TypeError:
-                print("in exepct", w, pl[:10])
-                # print(w in pl[0])
-                quit(1)
+            pl = sorted(pl, key=itemgetter(0))
         # convert to bytes
         b = b''.join([(doc_id << 16 | (tf & TF_MASK)).to_bytes(TUPLE_SIZE, 'big')
                       for doc_id, tf in pl])

@@ -1,10 +1,15 @@
+from pathlib import Path
+
 from src.methods.binary_search_methods import binary_search
 from src.invertedIndex import InvertedIndex
+# import sys
+# print(sys.path)
 
 # TODO load index here and base dir
-base_dir = ''
+base_dir = Path('C:/Users/Yuval/Documents/IR-finalP/data/title_index')
+name = 'wiki_index'
 print("Loading title index...")
-titleIndex = InvertedIndex.read_index(base_dir, 'title')
+titleIndex = InvertedIndex.read_index(base_dir, name)
 words, pls = zip(*titleIndex.posting_lists_iter(base_dir))
 print("Title index loaded successfully!")
 

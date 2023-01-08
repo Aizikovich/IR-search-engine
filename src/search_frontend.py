@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 
-from src.methods.pageViews import page_views
-from src.methods.pageRank import page_rank
+# from src.methods.pageViews import page_views
+# from src.methods.pageRank import page_rank
+from src.wrappers.title import search_title_by_query
 
 
 class MyFlaskApp(Flask):
@@ -46,7 +47,8 @@ def search():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-
+    #TODO return title instead of doc_id
+    doc_id = search_title_by_query(query, 100)
     # END SOLUTION
     return jsonify(res)
 
@@ -198,5 +200,6 @@ def get_pageview():
 
 
 if __name__ == '__main__':
+
     # run the Flask RESTful API, make the server publicly available (host='0.0.0.0') on port 8080
     app.run(host='0.0.0.0', port=8080, debug=True)

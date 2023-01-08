@@ -48,7 +48,11 @@ class MultiFileReader:
     def read(self, path, locs, n_bytes):
         b = []
         for f_name, offset in locs:
+            # Todo check if this is doesnt fuck up everything
+            f_name = f_name.split('\\')[-1]
             if f_name not in self._open_files:
+                # print('path', path)
+                # print('f_name', f_name)
                 self._open_files[f_name] = open(f'{path}/{f_name}', 'rb')
             f = self._open_files[f_name]
             f.seek(offset)
@@ -152,14 +156,14 @@ class InvertedIndex:
         # save file locations to index
         self.posting_locs[w].extend(locs)
 
-    def posting_lists_iter(self):
+    def posting_lists_iter(self, directory):
         """ A generator that reads one posting list from disk and yields
             a (word:str, [(doc_id:int, tf:int), ...]) tuple.
         """
         with closing(MultiFileReader()) as reader:
             for w, locs in self.posting_locs.items():
                 # read a certain number of bytes into variable b
-                b = reader.read(locs, self.df[w] * TUPLE_SIZE)
+                b = reader.read(directory, locs, self.df[w] * TUPLE_SIZE)
                 posting_list = []
                 j = TUPLE_SIZE
                 # TODO check if the loop is correct
@@ -211,6 +215,7 @@ class InvertedIndex:
     @staticmethod
     def read_index(base_dir, name):
         with open(Path(base_dir) / f'{name}.pkl', 'rb') as f:
+            print('Trying to read index')
             return pickle.load(f)
 
     @staticmethod
