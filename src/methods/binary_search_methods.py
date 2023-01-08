@@ -42,7 +42,7 @@ def get_top_n(candidates, n=0):
     return sort_candidates[:n]
 
 
-def binary_search(query_to_search, index, words, pls, n=0):
+def binary_search(query_to_search, words, pls, n=0):
     """
     Search for a query using binary search.
 

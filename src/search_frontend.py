@@ -1,9 +1,15 @@
-from flask import Flask, request, jsonify
+import sys
+from pathlib import Path
 
+from flask import Flask, request, jsonify
 # from src.methods.pageViews import page_views
 # from src.methods.pageRank import page_rank
-from src.wrappers.title import search_title_by_query
-from data.create_index import InvertedIndex
+from src.methods.binary_search_methods import binary_search
+# from wrappers.title import search_title_by_query
+from invertedIndex import InvertedIndex
+
+
+# from data.create_index import InvertedIndex
 
 
 class MyFlaskApp(Flask):
@@ -48,7 +54,7 @@ def search():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    #TODO return title instead of doc_id
+    # TODO return title instead of doc_id
     doc_id = search_title_by_query(query, 100)
     # END SOLUTION
     return jsonify(res)
@@ -106,9 +112,13 @@ def search_title():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    res = search_title_by_query(query, 0)
-    print(res)
-    # END SOLUTION
+    base_dir = Path('C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/title_index')
+    name = 'wiki_index'
+    title_index = InvertedIndex.read_index(base_dir, name)
+    words, pls = zip(*title_index.posting_lists_iter(base_dir))
+    # TODO covert binary search to result that is (doc_id, tf) to doc title
+    res = binary_search(query, words, pls, 100)
+
     return jsonify(res)
 
 
@@ -202,6 +212,5 @@ def get_pageview():
 
 
 if __name__ == '__main__':
-
     # run the Flask RESTful API, make the server publicly available (host='0.0.0.0') on port 8080
     app.run(host='0.0.0.0', port=8080, debug=True)

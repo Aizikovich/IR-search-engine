@@ -1,20 +1,19 @@
 from pathlib import Path
+import sys
 from src.methods.binary_search_methods import binary_search
 from src.invertedIndex import InvertedIndex
-# import src.invertedIndex as i
-from src.invertedIndex import InvertedIndex
+
+# from data.create_index import InvertedIndex
+
+# import sys
+# print(sys.path)
+
 # TODO load index here and base dir
 base_dir = Path('C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/title_index')
-print(f'\n when title is {__name__} \n base_dir is {base_dir}\n')
-
 name = 'wiki_index'
 print("Loading title index...")
-base_dir = Path('C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/title_index')
-name = 'wiki_index'
 titleIndex = InvertedIndex.read_index(base_dir, name)
 words, pls = zip(*titleIndex.posting_lists_iter(base_dir))
-
-
 print("Title index loaded successfully!")
 
 
