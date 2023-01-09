@@ -1,15 +1,47 @@
-import sys
 from pathlib import Path
 
 from flask import Flask, request, jsonify
+
+from src.methods.binary_search_methods import binary_search
 # from src.methods.pageViews import page_views
 # from src.methods.pageRank import page_rank
-from src.methods.binary_search_methods import binary_search
-# from wrappers.title import search_title_by_query
-from invertedIndex import InvertedIndex
-
-
 # from data.create_index import InvertedIndex
+# from src.load_data import AllIndices
+from src.invertedIndex import InvertedIndex
+from src.id_to_title import get_titles
+from src.methods.pageViews import page_views
+
+# First we load all the indices to memory
+name = 'wiki_index'
+basic_dir = 'C:/Users/Yuval/Documents/'
+
+base_dir = basic_dir + 'IR-finalP/data/title_index'
+print("Loading title index...")
+titleIndex = InvertedIndex.read_index(base_dir, name)
+Twords, Tpls = zip(*titleIndex.posting_lists_iter(base_dir))
+print("Title index loaded successfully!")
+
+base_dir = basic_dir + 'IR-finalP/data/anchor_index'
+print('Loading anchor index...')
+anchorIndex = InvertedIndex.read_index(base_dir, name)
+Awords, Apls = zip(*anchorIndex.posting_lists_iter(base_dir))
+print('Anchor index loaded successfully!')
+
+base_dir = basic_dir + 'IR-finalP/data/body_indices'
+print('Loading body indices...')
+bodyIndex = InvertedIndex.read_index(base_dir, name)
+Bwords, Bpls = zip(*anchorIndex.posting_lists_iter(base_dir))
+print('Body indices loaded successfully!')
+
+
+class AllIndices:
+    def __init__(self):
+        self.titleIIndex = (Twords, Tpls)
+        self.bodyIIndex = (Bwords, Bpls)
+        self.anchorIIndex = (Awords, Apls)
+
+
+indices = AllIndices()
 
 
 class MyFlaskApp(Flask):
@@ -19,16 +51,6 @@ class MyFlaskApp(Flask):
 
 app = MyFlaskApp(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
-
-
-# TODO: implement
-def id_to_title(doc_id: list):
-    """
-    This function convert a list of doc_id to a list of (doc_id, title) tuples.
-    :param doc_id: list of doc_id
-    :return:  list of (doc_id, title) tuples
-    """
-    return [(0, 0)]
 
 
 @app.route("/search")
@@ -112,13 +134,9 @@ def search_title():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    base_dir = Path('C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/title_index')
-    name = 'wiki_index'
-    title_index = InvertedIndex.read_index(base_dir, name)
-    words, pls = zip(*title_index.posting_lists_iter(base_dir))
-    # TODO covert binary search to result that is (doc_id, tf) to doc title
-    res = binary_search(query, words, pls, 100)
-
+    temp = binary_search(query, indices.titleIIndex[0], indices.titleIIndex[1])
+    res = get_titles([j[0] for j in temp])
+    # END SOLUTION
     return jsonify(res)
 
 
@@ -128,7 +146,7 @@ def search_anchor():
         IN THE ANCHOR TEXT of articles, ordered in descending order of the
         NUMBER OF QUERY WORDS that appear in anchor text linking to the page.
         DO NOT use stemming. DO USE the staff-provided tokenizer from Assignment
-        3 (GCP part) to do the tokenization and remove stopwords. For   example,
+        3 (GCP part) to do the tokenization and remove stopwords. For example,
         a document with a anchor text that matches two distinct query words will
         be ranked before a document with anchor text that matches only one
         distinct query word, regardless of the number of times the term appeared
@@ -148,10 +166,9 @@ def search_anchor():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    for word in query.split():
-        if word in anchor_text:
-            for wiki_id in anchor_text[word]:
-                res.append((wiki_id, title[wiki_id]))
+    n = 0
+    temp = binary_search(query, indices.anchorIIndex[0], indices.anchorIIndex[1])
+    res = get_titles([j[0] for j in temp])
     # END SOLUTION
     return jsonify(res)
 

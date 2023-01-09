@@ -54,7 +54,9 @@ def binary_search(query_to_search, words, pls, n=0):
     :return: list of top n doc_id
     """
     query = tokenize(query_to_search)
+    # print('query: ', query)
     candidates = get_candidate_documents_for_binary(query, words, pls)
+    # print('candidates: ', candidates)
     return [x[0] for x in get_top_n(candidates, n)]
 
 

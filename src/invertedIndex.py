@@ -2,10 +2,11 @@ import pickle
 from itertools import count
 from operator import itemgetter
 from pathlib import Path
+
 from collections import defaultdict, Counter
 from contextlib import closing
 
-print(__name__)
+# from src. import InvertedIndex
 
 BLOCK_SIZE = 1999998
 
@@ -52,7 +53,7 @@ class MultiFileReader:
             # Todo check if this is doesnt fuck up everything
             f_name = f_name.split('\\')[-1]
             if f_name not in self._open_files:
-                print('path', path)
+                # print('path', path)
                 # print('f_name', f_name)
                 self._open_files[f_name] = open(f'{path}/{f_name}', 'rb')
             f = self._open_files[f_name]
@@ -218,9 +219,6 @@ class InvertedIndex:
     @staticmethod
     def read_index(base_dir, name):
         with open(Path(base_dir) / f'{name}.pkl', 'rb') as f:
-            print(f'{Path(base_dir)}{name}')
-            print('Trying to read index')
-            # TODO check if this is correct
             return pickle.load(f)
 
     @staticmethod

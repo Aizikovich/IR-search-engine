@@ -1,18 +1,17 @@
 import pickle
+from collections import Counter
+
 import pandas as pd
 
 # Paths
 
 # TODO put real path here + download wiki page views data like we did in assignment 1
-PV_PATH = '/pageviews-202108-user.pkl'
-
+PV_PATH = 'C:/Users/Yuval/Documents/IR-finalP/data/pageviews-202108-user.pkl'
+wid2pv = Counter()
 print("Loading page views...")
 with open(PV_PATH, 'rb') as f:
     wid2pv = pickle.load(f)
-
-pv = pd.DataFrame.from_dict(wid2pv, orient='index', columns=['p_id', 'pageview'])
-pv = pv.set_index('p_id')
-pv_dict = pv.to_dict()['pageview']
+# Todo: is this the fastest way to do this?
 print("Page views loaded successfully!")
 
 
@@ -36,7 +35,7 @@ def page_views(ids):
     res = []
     for pid in ids:
         try:
-            res.append(pv_dict[pid])
+            res.append(wid2pv[pid])
         except KeyError:
             res.append(None)
     return res
