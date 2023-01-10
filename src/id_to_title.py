@@ -1,11 +1,9 @@
 from pathlib import Path
 
 import pandas as pd
+basic_dir = 'C:/Users/Yuval/Documents/'
 
-yuval = 'C:/Users/Yuval/Documents/IR-finalP/data/title_names.csv'
-eran = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/title_names.csv'
-
-base_dir = Path(eran)
+base_dir = Path(basic_dir + 'IR-finalP/data/title_names.csv')
 print("Loading title to id file...")
 title_to_id = pd.read_csv(base_dir, header=None, names=['id', 'title'])
 titles_dict = dict(zip(title_to_id['id'], title_to_id['title']))

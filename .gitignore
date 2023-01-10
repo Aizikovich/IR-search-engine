@@ -1,5 +1,5 @@
 *.pkl
 *.bin
-
+data/pr_wiki.csv
 scatches/
-.idea/
+#.idea/

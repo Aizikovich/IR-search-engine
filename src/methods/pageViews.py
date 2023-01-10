@@ -1,18 +1,18 @@
 import pickle
+
 from collections import Counter
+from pathlib import Path
 
 import pandas as pd
 
 # Paths
 
 # TODO put real path here + download wiki page views data like we did in assignment 1
+basic_dir = 'C:/Users/Yuval/Documents/'
 
-yuval = 'C:/Users/Yuval/Documents/IR-finalP/data/pageviews-202108-user.pkl'
-eran = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/pageviews-202108-user.pkl'
-
-
-PV_PATH = eran
+PV_PATH = Path(basic_dir + 'IR-finalP/data/pageviews-202108-user.pkl')
 wid2pv = Counter()
+
 print("Loading page views...")
 with open(PV_PATH, 'rb') as f:
     wid2pv = pickle.load(f)

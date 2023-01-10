@@ -1,10 +1,13 @@
+from pathlib import Path
+
 import pandas as pd
 
 # Paths
 
 # TODO put real path here + download wiki page rank data like we did in assignment 3
-PR_PATH = '/pr.csv'
+basic_dir = 'C:/Users/Yuval/Documents/'
 
+PR_PATH = Path(basic_dir + 'IR-finalP/data/pr_wiki.csv')
 print("Loading page rank...")
 pr = pd.read_csv(PR_PATH)
 pr.columns = ['p_id', 'page_rank']
