@@ -3,12 +3,11 @@ from pathlib import Path
 from flask import Flask, request, jsonify
 
 from src.methods.binary_search_methods import binary_search
-# from src.methods.pageViews import page_views
-# from src.methods.pageRank import page_rank
 # from data.create_index import InvertedIndex
 # from src.load_data import AllIndices
 from src.invertedIndex import InvertedIndex
 from src.id_to_title import get_titles
+from src.methods.pageRank import page_rank
 from src.methods.pageViews import page_views
 
 # First we load all the indices to memory
