@@ -1,7 +1,9 @@
 from pathlib import Path
+import sys
+
+print(sys.path)
 
 from flask import Flask, request, jsonify
-
 from src.methods.binary_search_methods import binary_search
 # from src.methods.pageViews import page_views
 # from src.methods.pageRank import page_rank
@@ -12,22 +14,26 @@ from src.id_to_title import get_titles
 from src.methods.pageViews import page_views
 
 # First we load all the indices to memory
-name = 'wiki_index'
-basic_dir = 'C:/Users/Yuval/Documents/'
 
-base_dir = basic_dir + 'IR-finalP/data/title_index'
+yuval_path = 'C:/Users/Yuval/Documents/IR-finalP/data/'
+eran_path = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/'
+
+name = 'wiki_index'
+basic_dir = eran_path
+
+base_dir = basic_dir + 'title_index'
 print("Loading title index...")
 titleIndex = InvertedIndex.read_index(base_dir, name)
 Twords, Tpls = zip(*titleIndex.posting_lists_iter(base_dir))
 print("Title index loaded successfully!")
 
-base_dir = basic_dir + 'IR-finalP/data/anchor_index'
+base_dir = basic_dir + 'anchor_index'
 print('Loading anchor index...')
 anchorIndex = InvertedIndex.read_index(base_dir, name)
 Awords, Apls = zip(*anchorIndex.posting_lists_iter(base_dir))
 print('Anchor index loaded successfully!')
 
-base_dir = basic_dir + 'IR-finalP/data/body_indices'
+base_dir = basic_dir + 'body_indices'
 print('Loading body indices...')
 bodyIndex = InvertedIndex.read_index(base_dir, name)
 Bwords, Bpls = zip(*anchorIndex.posting_lists_iter(base_dir))

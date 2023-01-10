@@ -6,7 +6,12 @@ import pandas as pd
 # Paths
 
 # TODO put real path here + download wiki page views data like we did in assignment 1
-PV_PATH = 'C:/Users/Yuval/Documents/IR-finalP/data/pageviews-202108-user.pkl'
+
+yuval = 'C:/Users/Yuval/Documents/IR-finalP/data/pageviews-202108-user.pkl'
+eran = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/pageviews-202108-user.pkl'
+
+
+PV_PATH = eran
 wid2pv = Counter()
 print("Loading page views...")
 with open(PV_PATH, 'rb') as f:
