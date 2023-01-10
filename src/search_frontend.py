@@ -81,8 +81,7 @@ def search():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-    # TODO return title instead of doc_id
-    doc_id = search_title_by_query(query, 100)
+
     # END SOLUTION
     return jsonify(res)
 
