@@ -1,3 +1,4 @@
+from collections import Counter
 from contextlib import closing
 
 import numpy as np
@@ -10,6 +11,13 @@ class InvertedIndexBody(InvertedIndex):
 
     def __init__(self, docs):
         super().__init__(docs)
+        self.docs = docs
+        self.docs_len = {}
+        self.term2remove = []
+        # filter words
+        self.filter_terms_by_frequency()
+        # calculate document length
+        self.calculate_doc_len()
 
     def filter_terms_by_frequency(self):
         """ Filter out terms that appear in less than 50 documents. """
@@ -19,9 +27,19 @@ class InvertedIndexBody(InvertedIndex):
             if self.df[term] >= 50:
                 temp[term] = locs
             else:
+                self.term2remove.append(term)
                 self.df.pop(term)
                 self.term_total.pop(term)
         self.posting_locs = temp
+
+    def calculate_doc_len(self):
+        """ Calculate the length of each document. """
+        for doc_id, tokens in self.docs.items():
+            temp = []
+            for token in tokens:
+                if token not in self.term2remove:
+                    temp.append(token)
+            self.docs_len[doc_id] = len(temp)
 
     def posting_lists_iter(self, directory):
         """ A generator that reads one posting list from disk and yields
@@ -40,10 +58,10 @@ class InvertedIndexBody(InvertedIndex):
                 # convert the bytes read into `b` to a proper posting list.
 
                 for i in range(self.df[term]):
-
                     doc_id = int.from_bytes(b[i * TUPLE_SIZE:i * TUPLE_SIZE + 4], 'big')
                     tf = int.from_bytes(b[i * TUPLE_SIZE + 4:(i + 1) * TUPLE_SIZE], 'big')
                     idf = np.log10(N / (self.df[term] + epsilon))
-                    posting_list.append((doc_id, tf*idf))
+                    normalized_tf = tf / self.docs_len[doc_id]
+                    posting_list.append((doc_id, normalized_tf * idf))
 
                 yield term, posting_list

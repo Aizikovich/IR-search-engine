@@ -8,9 +8,11 @@ from src.methods.binary_search_methods import binary_search
 # from data.create_index import InvertedIndex
 # from src.load_data import AllIndices
 from src.invertedIndex import InvertedIndex
+from src.inverted_index_body import InvertedIndexBody
 from src.id_to_title import get_titles
 from src.methods.pageRank import page_rank
 from src.methods.pageViews import page_views
+from src.methods.body_search import search_body_wiki
 
 # First we load all the indices to memory
 
@@ -34,8 +36,8 @@ print('Anchor index loaded successfully!')
 
 base_dir = basic_dir + 'body_indices'
 print('Loading body indices...')
-bodyIndex = InvertedIndex.read_index(base_dir, name)
-Bwords, Bpls = zip(*anchorIndex.posting_lists_iter(base_dir))
+bodyIndex = InvertedIndexBody.read_index(base_dir, name)
+Bwords, Bpls = zip(*bodyIndex.posting_lists_iter(directory=base_dir))
 print('Body indices loaded successfully!')
 
 
@@ -107,7 +109,8 @@ def search_body():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-
+    temp = search_body_wiki(query, index=bodyIndex, words=Bwords, pls=Bpls, n=100)
+    res = get_titles([j[0] for j in temp])
     # END SOLUTION
     return jsonify(res)
 
