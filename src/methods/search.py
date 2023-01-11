@@ -21,7 +21,7 @@ def normalize(df):
     return df
 
 
-def main_search(title_res, body_res, anchor_res, page_rank, page_view, wight_d=(1, 1, 1, 1, 1)):
+def main_search(title_res, body_res, anchor_res, page_rank, page_view, weight=(1, 1, 1, 1, 1), doc2vec=False):
     """
     This function is the main search function. It takes the results of the all search methods and combines them to one
     result.
@@ -60,13 +60,16 @@ def main_search(title_res, body_res, anchor_res, page_rank, page_view, wight_d=(
 
     # set id as index
     # Calculate the combined score
-    df['score'] = df['title'] * wight_d[0] + \
-                  df['body'] * wight_d[1] + \
-                  df['anchor'] * wight_d[2] + \
-                  df['page_rank'] * wight_d[3] + \
-                  df['page_rank'] * wight_d[4]
-    # Sort the results by the combined score
-    df = df.sort_values(by=['score'], ascending=False)
+    df['score'] = df['title'] * weight[0] + \
+                  df['body'] * weight[1] + \
+                  df['anchor'] * weight[2] + \
+                  df['page_rank'] * weight[3] + \
+                  df['page_rank'] * weight[4]
+    if not doc2vec:
+        # Sort the results by the combined score
+        df = df.sort_values(by=['score'], ascending=False)
+    else:
+
     # Return the sorted list of ids
     print(df)
     return df.index.tolist()[:100]

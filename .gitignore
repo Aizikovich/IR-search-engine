@@ -4,4 +4,5 @@ data/pr_wiki.csv
 scatches/
 #.idea/
 *.npy
-*.model
+data/doc2vec.model.dv.vectors.npy
+data/doc2vec.model

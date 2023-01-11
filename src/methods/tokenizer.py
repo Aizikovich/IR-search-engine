@@ -1,4 +1,4 @@
-import re
+import rez
 import nltk
 
 
