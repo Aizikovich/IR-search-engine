@@ -1,6 +1,8 @@
 from pathlib import Path
 import sys
 
+from src.methods.search import main_search
+
 print(sys.path)
 
 from flask import Flask, request, jsonify
@@ -83,7 +85,17 @@ def search():
     if len(query) == 0:
         return jsonify(res)
     # BEGIN SOLUTION
-
+    title = binary_search(query, indices.titleIIndex[0], indices.titleIIndex[1])
+    anchor = binary_search(query, indices.anchorIIndex[0], indices.anchorIIndex[1])
+    body = [(y[0], y[1][0][0]) for y in search_body_wiki(query, index=bodyIndex, words=Bwords, pls=Bpls, n=100)]
+    title_ids = [x[0] for x in title]
+    anchor_ids = [x[0] for x in anchor]
+    body_ids = [x[0] for x in body]
+    ids = list(set(title_ids + anchor_ids + body_ids))
+    pagerank = page_rank(ids, with_id=True)
+    pageview = page_views(ids, with_id=True)
+    res = main_search(title, body, anchor, pagerank, pageview)
+    res = get_titles(res)
     # END SOLUTION
     return jsonify(res)
 
@@ -110,8 +122,6 @@ def search_body():
         return jsonify(res)
     # BEGIN SOLUTION
     temp = search_body_wiki(query, index=bodyIndex, words=Bwords, pls=Bpls, n=100)
-    print(temp)
-
     res = get_titles([j[0] for j in temp])
     # END SOLUTION
     return jsonify(res)

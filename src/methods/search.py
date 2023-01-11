@@ -54,7 +54,7 @@ def main_search(title_res, body_res, anchor_res, page_rank, page_view, wight_d=(
     # Fill NaN with 0
     df = df.fillna(0)
     df = df.set_index('id')
-
+    # print(df)
     # apply normalization function to all columns except id
     df.iloc[:, 1:] = df.iloc[:, 1:].apply(normalize, axis=0)
 
@@ -68,14 +68,15 @@ def main_search(title_res, body_res, anchor_res, page_rank, page_view, wight_d=(
     # Sort the results by the combined score
     df = df.sort_values(by=['score'], ascending=False)
     # Return the sorted list of ids
-    return df.index.tolist()
+    print(df)
+    return df.index.tolist()[:100]
 
 
 # test
 if __name__ == '__main__':
-    title_res = [(1, 0.5), (2, 0.0), (5, 0.1)]
-    body_res = [(1, 0.5), (2, 0.3), (3, 1)]
-    anchor_res = [(1, 0.5), (2, 0.3), (4, 0.1)]
-    page_rank = [(1, 155), (2, 0.3), (6, 0.8)]
-    page_view = [(1, 5454), (7, 30), (3, 454541)]
-    print(main_search(title_res, body_res, anchor_res, page_rank, page_view))
+    title = [(1, 0.5), (2, 0.0), (5, 0.1)]
+    body = [(1, 0.5), (2, 0.3), (3, 1)]
+    anchor = [(1, 0.5), (2, 0.3), (4, 0.1)]
+    pagerank = [(1, 155), (2, 0.3), (6, 0.8)]
+    pageview = [(1, 5454), (7, 30), (3, 454541)]
+    print(main_search(title, body, anchor, pagerank, pageview))

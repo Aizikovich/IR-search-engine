@@ -20,7 +20,7 @@ pr_dict = pr.to_dict()['page_rank']
 print("Page rank data loaded successfully!")
 
 
-def page_rank(ids):
+def page_rank(ids, with_id=False):
     """
     Returns the page ranks values for each of the provided wiki article.
 
@@ -38,9 +38,9 @@ def page_rank(ids):
     res = []
     for pid in ids:
         try:
-            res.append(pr_dict[pid])
+            res.append((pid, pr_dict[pid])) if with_id else res.append(pr_dict[pid])
         except KeyError:
-            res.append(None)
+            res.append((pid, None)) if with_id else res.append(None)
     return res
 
 

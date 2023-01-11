@@ -23,7 +23,7 @@ with open(PV_PATH, 'rb') as f:
 print("Page views loaded successfully!")
 
 
-def page_views(ids):
+def page_views(ids, with_id=False):
     """
     Returns the number of page views that each of the provide wiki articles
     had in August 2021.
@@ -43,9 +43,9 @@ def page_views(ids):
     res = []
     for pid in ids:
         try:
-            res.append(wid2pv[pid])
+            res.append((pid, wid2pv[pid])) if with_id else res.append(wid2pv[pid])
         except KeyError:
-            res.append(None)
+            res.append((pid, None)) if with_id else res.append(None)
     return res
 
     
