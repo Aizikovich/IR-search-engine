@@ -80,3 +80,6 @@ To install and run our search engine, you will need:
 ## Known Issues and Limitations
 
 Currently, we are still trying to embed Doc2Vec neural network algorithm and it is not working properly yet. This feature is not currently available in our search engine.
+
+----------------------
+Please let us know if you have any other questions or need any additional changes.
