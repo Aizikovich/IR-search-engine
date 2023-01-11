@@ -110,6 +110,7 @@ def search_body():
         return jsonify(res)
     # BEGIN SOLUTION
     temp = search_body_wiki(query, index=bodyIndex, words=Bwords, pls=Bpls, n=100)
+
     res = get_titles([j[0] for j in temp])
     # END SOLUTION
     return jsonify(res)

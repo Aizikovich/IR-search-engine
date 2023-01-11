@@ -151,6 +151,21 @@ def get_top_n(sim_dict, n=0):
     return result[:n]
 
 
+def get_cosine_similarity(q_vector, docs_matrix):
+    """
+    Calculate the cosine similarity between the query and the documents.
+    :param q_vector:
+    :param docs_matrix: data frame - each row is a document, each column is a term, each cell is the tfidf score.
+    :return: dictionary - {key = doc id : value = cosine similarity score (q_vector & doc_vector)}
+    """
+    sim_dict = {}
+
+    for doc_id in docs_matrix.index:
+        doc_vector = docs_matrix.loc[doc_id].values
+        sim_dict[doc_id] = cosine_similarity(q_vector.reshape(1, -1), doc_vector.reshape(1, -1))
+    return sim_dict
+
+
 def search_body_wiki(query, index, words, pls, n=0):
     """
     Search for a given query in the body of the documents.
@@ -169,6 +184,6 @@ def search_body_wiki(query, index, words, pls, n=0):
     query_tokenize = tokenize(query)
     doc_tfidf = generate_document_tfidf_matrix(query_tokenize, index, words, pls)
     query_tfidf = generate_query_tfidf_vector(query_tokenize, index)
-    sim_score_dict = {doc_id: cosine_similarity(doc_tfidf, [query_tfidf]) for doc_id in doc_tfidf.index.values.tolist()}
+    sim_score_dict = get_cosine_similarity(query_tfidf, doc_tfidf)
 
     return get_top_n(sim_score_dict, n)
