@@ -20,7 +20,7 @@ yuval_path = 'C:/Users/Yuval/Documents/IR-finalP/data/'
 eran_path = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/'
 
 name = 'wiki_index'
-basic_dir = eran_path
+basic_dir = yuval_path
 
 base_dir = basic_dir + 'title_index'
 print("Loading title index...")
@@ -110,6 +110,7 @@ def search_body():
         return jsonify(res)
     # BEGIN SOLUTION
     temp = search_body_wiki(query, index=bodyIndex, words=Bwords, pls=Bpls, n=100)
+    print(temp)
 
     res = get_titles([j[0] for j in temp])
     # END SOLUTION

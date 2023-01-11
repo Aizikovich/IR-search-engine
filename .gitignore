@@ -3,3 +3,5 @@
 data/pr_wiki.csv
 scatches/
 #.idea/
+*.npy
+*.model

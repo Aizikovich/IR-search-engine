@@ -9,7 +9,6 @@ def get_candidate_documents_for_binary(query_to_search, words, pls):
 
     :param query_to_search: list of tokens (str).  Example: 'Hello, I love information retrival' --->
                                                     ['hello','love','information', 'retrieval']
-    :param index:        inverted index loaded from the corresponding files.
     :param words:        list of words in the index
     :param pls:          posting list for every word in words
     :return:         dictionary of candidate documents and their scores

@@ -12,8 +12,8 @@ import pandas as pd
 yuval = 'C:/Users/Yuval/Documents/IR-finalP/data/pageviews-202108-user.pkl'
 eran = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/pageviews-202108-user.pkl'
 
-basic_dir = eran
-PV_PATH = Path(eran)
+basic_dir = yuval
+PV_PATH = Path(basic_dir)
 wid2pv = Counter()
 
 print("Loading page views...")

@@ -9,7 +9,7 @@ import pandas as pd
 yuval = 'C:/Users/Yuval/Documents/IR-finalP/data/pr_wiki.csv'
 eran = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/pr_wiki.csv'
 
-basic_dir = eran
+basic_dir = yuval
 
 PR_PATH = Path(basic_dir)
 print("Loading page rank...")
