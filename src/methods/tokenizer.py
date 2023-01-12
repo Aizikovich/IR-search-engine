@@ -1,7 +1,5 @@
 import re
 import nltk
-
-
 nltk.download('stopwords')
 stopwords_frozen = frozenset(nltk.corpus.stopwords.words('english'))
 
@@ -14,7 +12,15 @@ def tokenize(text):
     :param text: str - text to tokenize
     :return: list - of tokens
     """
-    return [token.group() for token in RE_WORD.finditer(text.lower()) if token.group() not in stopwords_frozen]
+    corpus_stopwords = ["category", "references", "also", "external", "links",
+                        "may", "first", "see", "history", "people", "one", "two",
+                        "part", "thumb", "including", "second", "following",
+                        "many", "however", "would", "became"]
+
+    list_of_tokens = [token.group() for token in RE_WORD.finditer(text.lower()) if token.group() not in stopwords_frozen and token.group() not in corpus_stopwords]
+    return list_of_tokens
+
+
 
 
 stemmer = nltk.PorterStemmer()

@@ -159,9 +159,11 @@ def get_cosine_similarity(q_vector, docs_matrix):
     :return: dictionary - {key = doc id : value = cosine similarity score (q_vector & doc_vector)}
     """
     sim_dict = {}
-
+    # print(q_vector, '\n', type(q_vector),'\n')
+    # print(docs_matrix, '\n', type(docs_matrix),'\n')
     for doc_id in docs_matrix.index:
         doc_vector = docs_matrix.loc[doc_id].values
+
         sim_dict[doc_id] = cosine_similarity(q_vector.reshape(1, -1), doc_vector.reshape(1, -1))
     return sim_dict
 

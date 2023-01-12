@@ -4,7 +4,7 @@ import pandas as pd
 
 yuval = 'C:/Users/Yuval/Documents/IR-finalP/data/title_names.csv'
 eran = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/title_names.csv'
-basic_dir = yuval
+basic_dir = eran
 base_dir = Path(basic_dir)
 print("Loading title to id file...")
 title_to_id = pd.read_csv(base_dir, header=None, names=['id', 'title'])

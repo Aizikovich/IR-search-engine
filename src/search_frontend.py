@@ -22,7 +22,7 @@ yuval_path = 'C:/Users/Yuval/Documents/IR-finalP/data/'
 eran_path = 'C:/Users/Eran Aizikovich/Desktop/Courses/IR/final_proj/data/'
 
 name = 'wiki_index'
-basic_dir = yuval_path
+basic_dir = eran_path
 
 base_dir = basic_dir + 'title_index'
 print("Loading title index...")
