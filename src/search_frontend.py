@@ -3,8 +3,6 @@ import sys
 
 from src.methods.search import main_search
 
-print(sys.path)
-
 from flask import Flask, request, jsonify
 from src.methods.binary_search_methods import binary_search
 # from data.create_index import InvertedIndex
